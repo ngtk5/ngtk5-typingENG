@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- cssの読み込み -->
+    <!-- <link rel="stylesheet" href="static\css\reset.css"> -->
+    <link rel="stylesheet" href="static\css\style.css">
+    <title>Quiz Web Application</title>
+    <!-- 効果音読み込み -->
+    <audio id="correct_sound">
+        <source src="musics/正解.mp3">
+    </audio>
+    <audio id="incorrect_sound">
+        <source src="musics/不正解.mp3">
+    </audio>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header id="header">
+        <!-- ゲームタイトル -->
+        <h1 class="title">英単語早解きGAME!</h2>
+    </header>
+    <!-- コンテンツ -->
+    <div id="contents">
+        <section class="game">
+            <button class="data game_btn" style="display: flex;" id="game_start_btn" onclick="display(); start();">
+                <svg class="play-icon" viewBox="0 0 40 40">
+                    <path d="M 10,10 L 30,20 L 10,30 z"></path>
+                </svg>
+                GAME START
+            </button>
+            <!-- ゲームウィンドウ -->
+            <div class="data" id="game_window" style="display: none;">
+                <!--クイズの表示-->
+                <h2 id="_question">ここに問題が表示されます。</h2>
+                <!--回答-->
+                <form name="answer_form" onsubmit="return false" id="answer_form" style="display: flex;">
+                    <input type="text" id="answer" onsubmit="return false" placeholder="回答欄">
+                    <input type="submit" onclick="x();" style="display: none;">
+                </form>
+                <!-- RESTARTボタン ゲームが終了したら表示して、クリックすると再びゲームが始まる -->
+                <button style="display: none;" id="re_start_btn" class="game_btn" onclick="re_start();">RESTART</button>
+                <!-- 記録を保持(非表示) -->
+                <form method="post" action="{{ url_for('register') }}" style="display: none;" id="register">
+                    <input type="text" name="score" style="display: none;" id="score">
+                    <input type="text" name="time" style="display: none;" id="time">
+                    <input type="text" name="name" id="name" maxlength="10" placeholder="名前をいれてね">
+                    <!-- ランキングに記録を登録するボタン(main.pyのregisterメソッドが動く) -->
+                    <input type="submit" id="register_btn" value="ランキングに登録!" style="display: flex;">
+                </form>
+            </div>  <!-- ゲームウィンドウここまで -->
+        </section>
+        <section class="content-box">
+            <p class="box">
+                表示された言葉の意味を持つ英単語を答える速さを競うゲームです。<br>
+                出題される英単語は中学英語レベルです。<br>
+                全て小文字で回答してください(大文字が１つでもあると不正解になります)
+            </p>
+        </section>
+    </div>  <!-- コンテンツここまで -->
+    <!-- FOOTER -->
+    <footer id="footer">
+        <!-- ランキング -->
+        <section id="ranking">
+            <div id="ranking_title">
+                <h2>スコアランキング</h2>
+            </div>
+            <table class="table_box">
+                <tr>
+                    <th>順位</th>
+                    <th>名前</th>
+                    <th>スコア</th>
+                    <th>タイム</th>
+                </tr>
+                {% for player in ranking %}
+                    <tr class="list_crown">
+                        <td>{{ loop.index }}位</td>
+                        <td>{{ player[0] }}さん</td>
+                        <td>{{ player[1] }}点</td>
+                        <td>{{ player[2] }}秒</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </section>  <!-- ランキングここまで -->
+    </footer>   <!-- FOOTERここまで -->
+
+    <!-- jsの読み込み -->
+    <script src="static\js\script.js"></script>
+    <!-- <script src="static\js\fetch.js"></script> -->
+</body>
+</html>
